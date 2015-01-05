@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Ven 26 Décembre 2014 à 18:47
+-- Généré le :  Lun 05 Janvier 2015 à 23:44
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `categoriesforum` (
   `UserId` int(11) NOT NULL,
   PRIMARY KEY (`CatId`),
   KEY `UserId` (`UserId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Contenu de la table `categoriesforum`
@@ -61,14 +61,16 @@ CREATE TABLE IF NOT EXISTS `categoriesrss` (
   `UserId` int(11) NOT NULL,
   PRIMARY KEY (`CatId`),
   KEY `UserId` (`UserId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Contenu de la table `categoriesrss`
 --
 
 INSERT INTO `categoriesrss` (`CatId`, `CatLibelle`, `CatDate`, `UserId`) VALUES
-(7, 'Jeux Vidéos', '2014-12-26 18:35:21', 12);
+(7, 'Jeux Videos', '2014-12-26 18:35:21', 12),
+(8, 'Sports', '2015-01-05 23:11:03', 12),
+(9, 'Musique', '2015-01-05 23:37:04', 12);
 
 -- --------------------------------------------------------
 
@@ -182,19 +184,24 @@ CREATE TABLE IF NOT EXISTS `user` (
   `UserPassword` varchar(50) NOT NULL,
   `UserRole` int(11) NOT NULL,
   `UserAvatar` varchar(200) NOT NULL,
+  `UserEmail` varchar(50) DEFAULT NULL,
+  `UserNom` varchar(20) NOT NULL,
+  `UserPrenom` varchar(20) NOT NULL,
+  `UserNaissance` date NOT NULL,
   PRIMARY KEY (`UserId`),
-  UNIQUE KEY `UserLogin` (`UserLogin`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+  UNIQUE KEY `UserLogin` (`UserLogin`),
+  UNIQUE KEY `UserEmail` (`UserEmail`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
 
 --
 -- Contenu de la table `user`
 --
 
-INSERT INTO `user` (`UserId`, `UserLogin`, `UserPassword`, `UserRole`, `UserAvatar`) VALUES
-(12, 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 3, 'defaut.jpg'),
-(13, 'moderateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 2, 'defaut.jpg'),
-(14, 'utilisateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 1, 'defaut.jpg'),
-(15, 'banni', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 0, 'defaut.jpg');
+INSERT INTO `user` (`UserId`, `UserLogin`, `UserPassword`, `UserRole`, `UserAvatar`, `UserEmail`, `UserNom`, `UserPrenom`, `UserNaissance`) VALUES
+(12, 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 3, 'defaut.jpg', 'a@webforum.com', '', '', '0000-00-00'),
+(13, 'moderateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 2, 'defaut.jpg', 'b@webforum.com', '', '', '0000-00-00'),
+(14, 'utilisateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 1, 'defaut.jpg', 'c@webforum.com', '', '', '0000-00-00'),
+(15, 'banni', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 0, 'defaut.jpg', 'd@webforum.com', '', '', '0000-00-00');
 
 --
 -- Contraintes pour les tables exportées
@@ -216,8 +223,8 @@ ALTER TABLE `categoriesrss`
 -- Contraintes pour la table `fluxrss`
 --
 ALTER TABLE `fluxrss`
-  ADD CONSTRAINT `fluxrss_ibfk_2` FOREIGN KEY (`User_Id`) REFERENCES `user` (`UserId`),
-  ADD CONSTRAINT `fluxrss_ibfk_1` FOREIGN KEY (`Cat_id`) REFERENCES `categoriesrss` (`CatId`);
+  ADD CONSTRAINT `fluxrss_ibfk_1` FOREIGN KEY (`Cat_id`) REFERENCES `categoriesrss` (`CatId`),
+  ADD CONSTRAINT `fluxrss_ibfk_2` FOREIGN KEY (`User_Id`) REFERENCES `user` (`UserId`);
 
 --
 -- Contraintes pour la table `messages`

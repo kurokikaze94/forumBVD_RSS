@@ -21,8 +21,7 @@
 	    }
 	    else
 	    {
-	    	$password = sha1($_POST['password']);
-	    	$confirm = sha1($_POST['confirm']);
+	    	$password = sha1($password);
 	    }
 
 	    if (!empty($_FILES['avatar']['size']))
@@ -58,13 +57,11 @@
 	        }
 	    }
 
-	   if ($erreur==0)
-	   {
-	   		echo'<div>';
+		if ($erreur==0)
+		{
+			echo'<div>';
 			echo'<div>';
 			echo'<h1>Mise a jour de votre profil terminée</h1>';
-		    echo'<p>Bienvenue '.stripslashes(htmlspecialchars($_POST['login'])).'</p>
-			<p><a href="'.WEBROOT.'index.php">HOME</a></p>';
 			echo'</div></div>';
 
 			if(!empty($_FILES['avatar']['size']))
@@ -75,18 +72,19 @@
 		   	{
 		   		$nomavatar= "defaut.jpg";
 		   	}
-		    $requete1=$bdd->prepare('UPDATE user set UserPassword = :pass, UserAvatar = :nomavatar, UserEmail = :email WHERE UserLogin = :login)');
-			$requete1->bindValue(':login', $login, PDO::PARAM_STR);
-			$requete1->bindValue(':pass', $password, PDO::PARAM_INT);
+
+		    $requete1=$bdd->prepare('UPDATE user set UserPassword = :pass, UserAvatar = :nomavatar WHERE UserLogin = :login');
+			$requete1->bindValue(':pass', $password, PDO::PARAM_STR);
 			$requete1->bindValue(':nomavatar', $nomavatar, PDO::PARAM_STR);
-			$requete1->bindValue(':email', $email, PDO::PARAM_STR);
+			$requete1->bindValue(':login', $login, PDO::PARAM_STR);
 		    $requete1->execute();
+		    $requete1->CloseCursor();
 
 			$requete2=$bdd->prepare('SELECT UserId, UserLogin, UserAvatar, UserRole, UserEmail FROM user WHERE UserLogin = :login');
 			$requete2->bindValue(':login', $login, PDO::PARAM_STR);
 		    $requete2->execute();
 		    extract($requete2->fetch());
-			$requete->CloseCursor();
+			$requete2->CloseCursor();
 
 			$_SESSION['auth'] = 1;
 			$_SESSION['id'] = $UserId;

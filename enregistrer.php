@@ -15,8 +15,6 @@
 
 	    $erreur = 0;
 	    $login=$_POST['login'];
-	    //$password = $_POST['password'];
-	    //$confirm = $_POST['confirm'];
 	    $email = $_POST['email'];
 	    $confirmemail= $_POST['confirm'];
 
@@ -35,18 +33,6 @@
 	        $login_erreur2 = "Login vide ou trop long";
 	        $erreur++;
 	    }
-
-	    //generateur auto de password plus de declaration de pasword a la creation, reutilisation des champs pour enregistrer l'adresse mail ^^ //
-	    /*if ($password != $confirm || empty($confirm) || empty($password))
-	    {
-	        $mdp_erreur = "Password mal confirmé";
-	        $erreur++;
-	    }
-	    else
-	    {
-	    	$password = sha1($_POST['password']);
-	    	$confirm = sha1($_POST['confirm']);
-	    }*/
 
 	    $requetemail=$bdd->prepare('SELECT * FROM user WHERE UserEmail =:email');
 	    $requetemail->bindValue(':email',$email, PDO::PARAM_STR);
@@ -125,7 +111,7 @@
 		    $requete1=$bdd->prepare('INSERT INTO user (UserLogin, UserPassword, UserAvatar, UserRole, UserEmail)
 		    VALUES (:login, :pass, :nomavatar, 1, :email)');
 			$requete1->bindValue(':login', $login, PDO::PARAM_STR);
-			$requete1->bindValue(':pass', $password, PDO::PARAM_INT);
+			$requete1->bindValue(':pass', $password, PDO::PARAM_STR);
 			$requete1->bindValue(':nomavatar', $nomavatar, PDO::PARAM_STR);
 			$requete1->bindValue(':email', $email, PDO::PARAM_STR);
 		    $requete1->execute();
@@ -181,10 +167,10 @@
 
 	function move_avatar($avatar)
 	{
-	    $extension_upload = strtolower(substr(  strrchr($avatar['name'], '.')  ,1));
+	    $extension_upload = strtolower(substr(strrchr($avatar['name'], '.')  ,1));
 	    $name = time();
 	    $nomavatar = str_replace(' ','',$name).".".$extension_upload;
-	    $name = "<?php echo WEBROOT; ?>images/avatars/".str_replace(' ','',$name).".".$extension_upload;
+	    $name = "images/avatars/".str_replace(' ','',$name).".".$extension_upload;
 	    move_uploaded_file($avatar['tmp_name'],$name);
 	    return $nomavatar;
 	}

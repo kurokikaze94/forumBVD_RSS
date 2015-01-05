@@ -206,11 +206,154 @@ $cat = (isset($_GET['cat']))?htmlspecialchars($_GET['cat']):'';
       break;
     }
     break;
+
+    case "catrss":
+
+    $action = htmlspecialchars($_GET['action']);
+    switch($action)
+    {
+      case "creer":
+
+      if(empty($_GET['c']))
+      {
+        echo'<p><a href="'.WEBROOT.'admin.php?cat=catrss&action=creer&c=c">Créer une catégorie</a></p>';
+      }
+      elseif($_GET['c'] == "c")
+      {
+        echo'<h1>Création d une catégorie</h1>';
+        echo'<form method="post" action="'.WEBROOT.'majadmin.php?cat=catrss&action=creer&c=c">';
+        echo'<label> Indiquez le nom de la catégorie :</label>
+        <input type="text" id="nom" name="nom" /><br /><br />   
+        <input type="submit" value="Envoyer"></form>';
+      }
+      break;
+      
+      case "edit":
+      if(!isset($_GET['e']))
+      {
+        echo'<p><a href="'.WEBROOT.'admin.php?cat=catrss&action=edit&amp;e=editc">Editer une catégorie</a></p>';
+      }
+      elseif($_GET['e'] == "editc")
+      {
+        if(!isset($_POST['cat']))
+        {
+          $requete = $bdd->query('SELECT * FROM categoriesrss ORDER BY CatDate DESC');
+          echo'<form method="post" action="'.WEBROOT.'admin.php?cat=catrss&amp;action=edit&amp;e=editc">';
+          echo'<p>Choisir une catégorie :</br />
+          <select name="cat">';
+          while($data = $requete->fetch())
+          {
+            echo'<option value="'.$data['CatId'].'">'.$data['CatLibelle'].'</option>';
+          }
+          echo'<input type="submit" value="Envoyer"></p></form>';         
+          $requete->CloseCursor();                                                                  
+        }         
+        else
+        {
+          $requete = $bdd->prepare('SELECT CatLibelle FROM categoriesrss WHERE CatId = :catid');
+          $requete->bindValue(':catid',(int) $_POST['cat'],PDO::PARAM_INT);
+          $requete->execute();
+          $data = $requete->fetch();
+          echo'<form method="post" action="'.WEBROOT.'majadmin.php?cat=catrss&amp;action=edit&amp;e=editc">';
+          echo'<label> Indiquez le nom de la catégorie :</label>';
+          echo'<input type="text" id="nom" name="nom" value="'.stripslashes(htmlspecialchars($data['CatLibelle'])).'" /><br /><br />';
+          echo'<input type="hidden" name="cat" value="'.$_POST['cat'].'" />';
+          echo'<input type="submit" value="Envoyer" /></p></form>';
+          $requete->CloseCursor();                            
+        }
+      }
+      break;
+
+      default;
+      if($_SESSION['droit']==='3')
+      {
+        echo'<h1>Administration du forum</h1>';
+        echo'<a href="'.WEBROOT.'admin.php?cat=catrss&amp;action=creer">Creation d\'une catégorie</a><br />
+        <a href="'.WEBROOT.'admin.php?cat=catrss&amp;action=edit">Edition d\'une catégorie</a><br />
+        <a href="'.WEBROOT.'admin.php?cat=catrss&amp;action=supprimer"><s>Supprimer une catégorie</s></a><br />';
+      }
+      break;
+    }
+    break;
+
+    case "rss":
+
+    $action = htmlspecialchars($_GET['action']);
+    switch($action)
+    {
+      case "creer":
+
+      if(empty($_GET['c']))
+      {
+        echo'<p><a href="'.WEBROOT.'admin.php?cat=rss&action=creer&c=c">Créer un flux</a></p>';
+      }
+      elseif($_GET['c'] == "c")
+      {
+        echo'<h1>Création d un flux</h1>';
+        echo'<form method="post" action="'.WEBROOT.'majadmin.php?cat=rss&action=creer&c=c">';
+        echo'<label> Indiquez le nom du flux :</label>
+        <input type="text" id="nom" name="nom" /><br /><br />
+        <label> Indiquez la categorie du flux :</label>
+        <input type="text" id="cat" name="cat" /><br /><br />    
+        <input type="submit" value="Envoyer"></form>';
+      }
+      break;
+      
+      case "edit":
+      if(!isset($_GET['e']))
+      {
+        echo'<p><a href="'.WEBROOT.'admin.php?cat=forum&action=edit&amp;e=editc">Editer une catégorie</a></p>';
+      }
+      elseif($_GET['e'] == "editc")
+      {
+        if(!isset($_POST['cat']))
+        {
+          $requete = $bdd->query('SELECT * FROM categoriesforum ORDER BY CatDate DESC');
+          echo'<form method="post" action="'.WEBROOT.'admin.php?cat=forum&amp;action=edit&amp;e=editc">';
+          echo'<p>Choisir une catégorie :</br />
+          <select name="cat">';
+          while($data = $requete->fetch())
+          {
+            echo'<option value="'.$data['CatId'].'">'.$data['CatLibelle'].'</option>';
+          }
+          echo'<input type="submit" value="Envoyer"></p></form>';         
+          $requete->CloseCursor();                                                                  
+        }         
+        else
+        {
+          $requete = $bdd->prepare('SELECT CatLibelle FROM categoriesforum WHERE CatId = :catid');
+          $requete->bindValue(':catid',(int) $_POST['cat'],PDO::PARAM_INT);
+          $requete->execute();
+          $data = $requete->fetch();
+          echo'<form method="post" action="'.WEBROOT.'majadmin.php?cat=forum&amp;action=edit&amp;e=editc">';
+          echo'<label> Indiquez le nom de la catégorie :</label>';
+          echo'<input type="text" id="nom" name="nom" value="'.stripslashes(htmlspecialchars($data['CatLibelle'])).'" /><br /><br />';
+          echo'<input type="hidden" name="cat" value="'.$_POST['cat'].'" />';
+          echo'<input type="submit" value="Envoyer" /></p></form>';
+          $requete->CloseCursor();                            
+        }
+      }
+      break;
+
+      default;
+      if($_SESSION['droit']==='3')
+      {
+        echo'<h1>Administration du forum</h1>';
+        echo'<a href="'.WEBROOT.'admin.php?cat=forum&amp;action=creer">Creation d\'un flux</a><br />
+        <a href="'.WEBROOT.'admin.php?cat=forum&amp;action=edit">Edition d\'un flux</a><br />
+        <a href="'.WEBROOT.'admin.php?cat=forum&amp;action=supprimer"><s>Supprimer un flux</s></a><br />';
+      }
+      break;
+    }
+    break;
+
     default;
       echo'<h1>Administration</h1>';
       if($_SESSION['droit']==='3')
       {
         echo'<a href="'.WEBROOT.'admin.php?cat=forum&amp;action=">Administration du forum</a><br />';
+        echo'<a href="'.WEBROOT.'admin.php?cat=catrss&amp;action=">Administration des categories de flux RSS</a><br />';
+        echo'<a href="'.WEBROOT.'admin.php?cat=rss&amp;action=">Administration des flux RSS</a><br />';
       }
       echo'<a href="'.WEBROOT.'admin.php?cat=membres&amp;action=">Administration des membres</a><br /></p>';
     break;

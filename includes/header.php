@@ -55,7 +55,6 @@
                   echo " <li><a href='admin.php'>Administration</a></li>";
                 }
                 echo " <li><a href='rss.php'>flux RSS</a></li>";
-                echo " <li><a href='rss_management.php'>Management des flux RSS</a></li>";
                 echo " <li><a href='profil.php'>Profil</a></li>";
                 echo " <li><a href='logout.php'>Logout</a></li>";
               } 
