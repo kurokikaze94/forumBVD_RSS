@@ -17,7 +17,6 @@
   echo '<form method="post">';
   echo '<label for="choix_cat_rss">Categorie RSS:</label>';
   echo '<select name="choix_cat_rss">';
-  echo '<option value="0" selected="selected">';
 
   $requete0 = $bdd->prepare('SELECT catid, catlibelle FROM categoriesrss');
   $requete0->execute();
@@ -27,7 +26,14 @@
     for($i=0;$i<$requete0->rowCount();$i++)
     {
       extract($requete0->fetch());
-      echo '<option value="'.$catid.'">"'.$catlibelle.'"</option>';
+      if($catid == $choix_cat_flux)
+      {
+        echo '<option value="'.$catid.'" selected="selected">"'.$catlibelle.'"</option>';
+      }
+      else
+      {
+        echo '<option value="'.$catid.'">"'.$catlibelle.'"</option>';
+      }
     }
   }
   echo '</select>';
@@ -64,10 +70,13 @@ if (isset($_POST['GO']))
   }
   else
   {
-    $requete2 = $bdd->prepare('SELECT url FROM fluxrss where id = :id');
+    $requete2 = $bdd->prepare('SELECT nom , url FROM fluxrss where id = :id');
     $requete2->bindValue(':id',$choix_flux, PDO::PARAM_INT);
     $requete2->execute();
     extract($requete2->fetch());
+
+    echo "<h1>Flux RSS : ".$nom.".</h1>";
+
     $url_rss[0] = $url;
     include_once ('rss_admin.php'); 
     $tableau = array(); 

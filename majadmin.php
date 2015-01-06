@@ -180,13 +180,14 @@ $cat = (isset($_GET['cat']))?htmlspecialchars($_GET['cat']):'';
       {
         echo'<p><a href="'.WEBROOT.'admin.php?cat=rss&action=creer&c=c">Créer un flux</a></p>';
       }
+
       if ($_GET['c'] == "c")
       {
-        $titre = $_POST['nom'];
-        $query=$bdd->prepare('INSERT INTO fluxrss (nom, url, catid, UserId) VALUES (:titre, :url, :catid, :userid)');
-        $query->bindValue(':titre',$titre, PDO::PARAM_STR); 
-        $query->bindValue(':url',$url, PDO::PARAM_STR); 
-        $query->bindValue(':catid',$_POST['id'], PDO::PARAM_INT);
+        var_dump($_POST);
+        $query=$bdd->prepare('INSERT INTO fluxrss (nom, url, cat_id, User_Id) VALUES (:titre, :url, :catid, :userid)');
+        $query->bindValue(':titre',$titre = $_POST['nom'], PDO::PARAM_STR); 
+        $query->bindValue(':url', $_POST['url'], PDO::PARAM_STR); 
+        $query->bindValue(':catid',$_POST['choix_cat_rss'], PDO::PARAM_INT);
         $query->bindValue(':userid',$_SESSION['id'], PDO::PARAM_INT);  
         $query->execute();          
         echo'<p>Le flux a été créée !<br /> Cliquez <a href="'.WEBROOT.'admin.php">ici</a> 
@@ -202,9 +203,6 @@ $cat = (isset($_GET['cat']))?htmlspecialchars($_GET['cat']):'';
       }
       elseif($_GET['e'] == "editc")
       {
-        $titre = $_POST['nom'];
-        $url = $_POST['url'];
-
         $query=$bdd->prepare('SELECT COUNT(*) 
         FROM fluxrss WHERE Id = :id');
         $query->bindValue(':id',(int) $_POST['cat'],PDO::PARAM_INT);
@@ -214,10 +212,11 @@ $cat = (isset($_GET['cat']))?htmlspecialchars($_GET['cat']):'';
         if ($cat_existe == 0) erreur(ERR_CAT_EXIST);
         
         $query=$bdd->prepare('UPDATE fluxrss
-        SET nom = :name, url = :url WHERE Id = :cat');
-        $query->bindValue(':name',$titre,PDO::PARAM_STR);
-        $query->bindValue(':url',$url, PDO::PARAM_STR); 
-        $query->bindValue(':id',(int) $_POST['cat'],PDO::PARAM_INT);
+        SET nom = :name, url = :url, cat_id = :catid WHERE Id = :id');
+        $query->bindValue(':name',$_POST['nom'],PDO::PARAM_STR);
+        $query->bindValue(':url',$_POST['url'], PDO::PARAM_STR);
+        $query->bindValue(':catid',$_POST['catrss'], PDO::PARAM_INT); 
+        $query->bindValue(':id', $_POST['cat'],PDO::PARAM_INT);
         $query->execute();
         $query->CloseCursor();
 

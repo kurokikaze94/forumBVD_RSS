@@ -30,13 +30,13 @@
                     echo "<h3><b>Consignes : </b></h3>
                         <ol>
                             <li>differents topics triés par categories et commentables</li>
-                            <li><b>gestions de flux rss</b></li>
+                            <li>gestions de flux rss</li>
                             <li><b>messagerie inter user</b></li>
                             <li>generation auto de mots de passe a la creation du compte</li>
                         </ol>
                         <h3>Utilisateur</h3>
                         <ol>
-                            <li>s'inscrire (login, <b>email</b>)</li>
+                            <li>s'inscrire (login, <b>données perso</b>)</li>
                             <li>Enregistrer une image avatar</li>
                             <li>modifier et supprimer ses propres posts</li>
                             <li><b>modifier ses données personnelles</b></li>
@@ -46,14 +46,14 @@
                         <h3>Moderateurs</h3>
                         <ol>
                             <li>supprimer tout posts</li>
-                            <li>bannir / <b>supprimer tout utilisateur</b></li>
+                            <li>bannir tout utilisateur</li>
                             <li>+ droits utilisateurs</li>
                         </ol>
                         <h3>Administrateur</h3>
                         <ol>
                            <li>creation topics et de categories du forum</li>
                             <li>promulgation/suppression de droits moderateur/administrateur</li>
-                            <li><b>creation de flux rss</b> et de categories de flux</li>
+                            <li>creation de flux rss et de categories de flux</li>
                             <li>+ droit modo</li>
                         </ol>";
                 } 
