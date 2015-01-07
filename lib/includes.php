@@ -4,3 +4,4 @@
 <?php require_once("class.phpmailer.php"); ?>
 <?php require_once("class.smtp.php"); ?>
 <?php require_once("sendmail.php"); ?>
+<?php require_once ('rss_admin.php'); ?>

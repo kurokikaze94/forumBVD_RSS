@@ -78,7 +78,6 @@ if (isset($_POST['GO']))
     echo "<h1>Flux RSS : ".$nom.".</h1>";
 
     $url_rss[0] = $url;
-    include_once ('rss_admin.php'); 
     $tableau = array(); 
 
     foreach ($url_rss as $k=>$v) 
@@ -89,13 +88,25 @@ if (isset($_POST['GO']))
     foreach($tableau as $index=>$valeur)
     {
       echo "<div>";
+      echo '<form method="post">';
       echo "<h3><b>".$valeur['title']."</b></h3>";
       echo "<p><i>Date : ".$valeur['date']."</i></p>";
       echo "<p>".$valeur['description']."</p>";
       echo "<a href='".$valeur['link']."'>".$valeur['link']."</a>";
+      echo'<input type="hidden" name="urlrss" value="'.$valeur['link'].'" />';
+      echo '<input type="submit" value="mail" name="mailrss"/></form>';
       echo "</div>";
     }
   } 
+}
+
+if (isset($_POST['mailrss']))
+{
+      $to       =   $_SESSION['email'];
+      $subject  =   "Bonne lecture";
+      $message  =   $_POST['urlrss'];
+      $name     =   "Wbforum BVD";
+      $mailsend =   sendmail($to,$subject,$message,$name);
 } 
 ?>
 </div>

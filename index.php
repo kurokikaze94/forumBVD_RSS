@@ -36,10 +36,10 @@
                         </ol>
                         <h3>Utilisateur</h3>
                         <ol>
-                            <li>s'inscrire (login, <b>données perso</b>)</li>
+                            <li>s'inscrire (login, données perso)</li>
                             <li>Enregistrer une image avatar</li>
                             <li>modifier et supprimer ses propres posts</li>
-                            <li><b>modifier ses données personnelles</b></li>
+                            <li>modifier ses données personnelles</li>
                             <li>consulter et <b>commenter les new rss</b></li>
                             <li><b>communication via messagerie interne et mail avec autres users</b></li>
                         </ol>
