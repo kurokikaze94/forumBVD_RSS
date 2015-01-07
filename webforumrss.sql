@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 05 Janvier 2015 à 23:44
+-- Généré le :  Jeu 08 Janvier 2015 à 00:07
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `categoriesforum` (
   `UserId` int(11) NOT NULL,
   PRIMARY KEY (`CatId`),
   KEY `UserId` (`UserId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Contenu de la table `categoriesforum`
@@ -68,8 +68,9 @@ CREATE TABLE IF NOT EXISTS `categoriesrss` (
 --
 
 INSERT INTO `categoriesrss` (`CatId`, `CatLibelle`, `CatDate`, `UserId`) VALUES
+(0, 'Vrac', '2015-01-01 00:00:00', 12),
 (7, 'Jeux Videos', '2014-12-26 18:35:21', 12),
-(8, 'Sports', '2015-01-05 23:11:03', 12),
+(8, 'Sport', '2015-01-05 23:11:03', 12),
 (9, 'Musique', '2015-01-05 23:37:04', 12);
 
 -- --------------------------------------------------------
@@ -97,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `fluxrss` (
 
 INSERT INTO `fluxrss` (`id`, `nom`, `URL`, `Cat_id`, `User_Id`) VALUES
 (1, 'JV.com', 'http://www.jeuxvideo.com/rss/rss-pc.xml', 7, 12),
-(2, 'IGN', 'http://feeds.ign.com/ign/pc-all?format=xml', 7, 12);
+(2, 'IGN', 'http://feeds.ign.com/ign/pc-all?format=xml', 0, 12);
 
 -- --------------------------------------------------------
 
@@ -115,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   PRIMARY KEY (`MesId`),
   KEY `UserId` (`UserId`),
   KEY `TopicId` (`TopicId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
 --
 -- Contenu de la table `messages`
@@ -139,7 +140,13 @@ INSERT INTO `messages` (`MesId`, `MesText`, `MesDate`, `UserId`, `TopicId`) VALU
 (15, 'message 3', '2014-11-11 11:37:01', 14, 5),
 (16, 'message 1', '2014-11-11 11:37:01', 12, 6),
 (17, 'message 2', '2014-11-11 11:37:01', 13, 6),
-(18, 'message 3', '2014-11-11 11:37:01', 14, 6);
+(18, 'message 3', '2014-11-11 11:37:01', 14, 6),
+(21, 'Message 4', '2015-01-06 21:18:47', 15, 1),
+(22, 'Message 4', '2015-01-06 21:18:47', 14, 2),
+(23, 'Message 4', '2015-01-06 21:18:47', 14, 3),
+(24, 'Message 4', '2015-01-06 21:18:47', 14, 4),
+(25, 'Message 4', '2015-01-06 21:18:47', 14, 5),
+(26, 'Message 4', '2015-01-06 21:18:47', 14, 6);
 
 -- --------------------------------------------------------
 
@@ -187,21 +194,21 @@ CREATE TABLE IF NOT EXISTS `user` (
   `UserEmail` varchar(50) DEFAULT NULL,
   `UserNom` varchar(20) NOT NULL,
   `UserPrenom` varchar(20) NOT NULL,
-  `UserNaissance` date NOT NULL,
+  `UserTel` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`UserId`),
   UNIQUE KEY `UserLogin` (`UserLogin`),
   UNIQUE KEY `UserEmail` (`UserEmail`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 --
 -- Contenu de la table `user`
 --
 
-INSERT INTO `user` (`UserId`, `UserLogin`, `UserPassword`, `UserRole`, `UserAvatar`, `UserEmail`, `UserNom`, `UserPrenom`, `UserNaissance`) VALUES
-(12, 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 3, 'defaut.jpg', 'a@webforum.com', '', '', '0000-00-00'),
-(13, 'moderateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 2, 'defaut.jpg', 'b@webforum.com', '', '', '0000-00-00'),
-(14, 'utilisateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 1, 'defaut.jpg', 'c@webforum.com', '', '', '0000-00-00'),
-(15, 'banni', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 0, 'defaut.jpg', 'd@webforum.com', '', '', '0000-00-00');
+INSERT INTO `user` (`UserId`, `UserLogin`, `UserPassword`, `UserRole`, `UserAvatar`, `UserEmail`, `UserNom`, `UserPrenom`, `UserTel`) VALUES
+(12, 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 3, 'defaut.jpg', 'burbaud.n@hotmail.fr', 'admin', 'admin', '01 00 00 00 00'),
+(13, 'moderateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 2, 'defaut.jpg', 'modo@webforum.com', 'moderateur', 'moderateur', '02 00 00 00 00'),
+(14, 'utilisateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 1, 'defaut.jpg', 'user@webforum.com', 'user', 'user', '03 00 00 00 00'),
+(15, 'banni', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 0, 'defaut.jpg', 'banni@webforum.com', 'banni', 'banni', '04 00 00 00 00');
 
 --
 -- Contraintes pour les tables exportées

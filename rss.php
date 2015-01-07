@@ -94,6 +94,7 @@ if (isset($_POST['GO']))
       echo "<p>".$valeur['description']."</p>";
       echo "<a href='".$valeur['link']."'>".$valeur['link']."</a>";
       echo'<input type="hidden" name="urlrss" value="'.$valeur['link'].'" />';
+      echo'<input type="hidden" name="nomrss" value="'.$valeur['title'].'" />';
       echo '<input type="submit" value="mail" name="mailrss"/></form>';
       echo "</div>";
     }
@@ -104,9 +105,10 @@ if (isset($_POST['mailrss']))
 {
       $to       =   $_SESSION['email'];
       $subject  =   "Bonne lecture";
-      $message  =   $_POST['urlrss'];
+      $message  =   "<a href =".$_POST['urlrss'].">".$_POST['nomrss']."</a>";
       $name     =   "Wbforum BVD";
       $mailsend =   sendmail($to,$subject,$message,$name);
+      echo "<h1>lien envoyé vers votre boite mail personelle.</h1>";
 } 
 ?>
 </div>
