@@ -1,6 +1,8 @@
 <?php require_once("includes/header.php"); ?>
 <?php if($_SESSION['auth'] != 0) {header("Location:".WEBROOT."index.php");}?>
 <?php
+	echo"<h1>LOGIN</h1>";
+
 	if (isset($_POST['submit']))
 	{	
 		extract($_POST);
@@ -54,9 +56,7 @@
 		}
 	}
 ?>
-</div>
-	<div>
-		<div>
+
 			<h1>Connexion</h1>
 			<form method="post" action="">
 				<div>
@@ -69,7 +69,5 @@
 				</div>
 				<input type="submit" value="Se Connecter" name="submit"/>
 			</form>
-		</div>
-	</div>
 
 <?php require_once("includes/footer.php"); ?>

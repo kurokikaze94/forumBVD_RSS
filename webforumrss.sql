@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Jeu 08 Janvier 2015 à 00:07
+-- Généré le :  Mar 13 Janvier 2015 à 23:38
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -72,6 +72,23 @@ INSERT INTO `categoriesrss` (`CatId`, `CatLibelle`, `CatDate`, `UserId`) VALUES
 (7, 'Jeux Videos', '2014-12-26 18:35:21', 12),
 (8, 'Sport', '2015-01-05 23:11:03', 12),
 (9, 'Musique', '2015-01-05 23:37:04', 12);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `commentairerss`
+--
+
+DROP TABLE IF EXISTS `commentairerss`;
+CREATE TABLE IF NOT EXISTS `commentairerss` (
+  `idCRSS` int(11) NOT NULL,
+  `URLCRSS` varchar(255) NOT NULL,
+  `commentaire` varchar(500) NOT NULL,
+  `dateCRSS` datetime NOT NULL,
+  `idCatrss` int(11) NOT NULL,
+  PRIMARY KEY (`idCRSS`),
+  UNIQUE KEY `idCatrss` (`idCatrss`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -151,6 +168,24 @@ INSERT INTO `messages` (`MesId`, `MesText`, `MesDate`, `UserId`, `TopicId`) VALU
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `topicrss`
+--
+
+DROP TABLE IF EXISTS `topicrss`;
+CREATE TABLE IF NOT EXISTS `topicrss` (
+  `rssTopicId` int(11) NOT NULL AUTO_INCREMENT,
+  `rssTopicLibelle` varchar(100) NOT NULL,
+  `rssTopicDate` datetime NOT NULL,
+  `UserId` int(11) NOT NULL,
+  `CatId` int(11) NOT NULL,
+  PRIMARY KEY (`rssTopicId`),
+  KEY `UserId` (`UserId`),
+  KEY `CatId` (`CatId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `topics`
 --
 
@@ -205,8 +240,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`UserId`, `UserLogin`, `UserPassword`, `UserRole`, `UserAvatar`, `UserEmail`, `UserNom`, `UserPrenom`, `UserTel`) VALUES
-(12, 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 3, 'defaut.jpg', 'burbaud.n@hotmail.fr', 'admin', 'admin', '01 00 00 00 00'),
-(13, 'moderateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 2, 'defaut.jpg', 'modo@webforum.com', 'moderateur', 'moderateur', '02 00 00 00 00'),
+(12, 'admin', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 3, 'admin.png', 'burbaud.n@hotmail.fr', 'admin', 'admin', '01 00 00 00 00'),
+(13, 'moderateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 2, 'modo.png', 'modo@webforum.com', 'moderateur', 'moderateur', '02 00 00 00 00'),
 (14, 'utilisateur', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 1, 'defaut.jpg', 'user@webforum.com', 'user', 'user', '03 00 00 00 00'),
 (15, 'banni', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 0, 'defaut.jpg', 'banni@webforum.com', 'banni', 'banni', '04 00 00 00 00');
 
@@ -227,6 +262,12 @@ ALTER TABLE `categoriesrss`
   ADD CONSTRAINT `categoriesRss_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `user` (`UserId`);
 
 --
+-- Contraintes pour la table `commentairerss`
+--
+ALTER TABLE `commentairerss`
+  ADD CONSTRAINT `commentairerss_ibfk_1` FOREIGN KEY (`idCatrss`) REFERENCES `categoriesrss` (`CatId`);
+
+--
 -- Contraintes pour la table `fluxrss`
 --
 ALTER TABLE `fluxrss`
@@ -239,6 +280,13 @@ ALTER TABLE `fluxrss`
 ALTER TABLE `messages`
   ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `user` (`UserId`),
   ADD CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`TopicId`) REFERENCES `topics` (`TopicId`);
+
+--
+-- Contraintes pour la table `topicrss`
+--
+ALTER TABLE `topicrss`
+  ADD CONSTRAINT `topicrss_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `user` (`UserId`),
+  ADD CONSTRAINT `topicrss_ibfk_2` FOREIGN KEY (`CatId`) REFERENCES `categoriesrss` (`CatId`);
 
 --
 -- Contraintes pour la table `topics`

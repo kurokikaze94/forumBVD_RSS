@@ -3,6 +3,7 @@
 <?php if($_SESSION['auth'] == 0) {header("Location:".WEBROOT."index.php");}?>
 
 <?php 
+  echo"<h1>RSS</h1>";
   $choix_cat_flux = 0;
   if (isset($_POST["choix_cat_rss"]))
   {
@@ -92,11 +93,22 @@ if (isset($_POST['GO']))
       echo "<h3><b>".$valeur['title']."</b></h3>";
       echo "<p><i>Date : ".$valeur['date']."</i></p>";
       echo "<p>".$valeur['description']."</p>";
-      echo "<a href='".$valeur['link']."'>".$valeur['link']."</a>";
+      echo "<a href='".$valeur['link']."'>".$valeur['link']."</a></br></br>";
       echo'<input type="hidden" name="urlrss" value="'.$valeur['link'].'" />';
       echo'<input type="hidden" name="nomrss" value="'.$valeur['title'].'" />';
-      echo '<input type="submit" value="mail" name="mailrss"/></form>';
-      echo "</div>";
+      echo'<input type="submit" value="mail pour vous" name="mailrss"/>';
+      echo'<input type="email" name="emailrssother" placeholder="Email"/>';
+      echo'<input type="submit" value="mail pour un ami" name="mailrssother"/></br>';
+
+      $requete3 = $bdd->prepare('SELECT count(*) as countcom FROM commentairerss WHERE URLCRSS = :url');
+      $requete3->bindValue(':url',$valeur['link'], PDO::PARAM_STR);
+      $requete3->execute();
+      extract($requete3->fetch());
+      
+      echo "<a href='comRSS.php'>Commenter cette new (".$countcom." commentaires actuellement)</a></br></br>";
+
+      echo"</form>";
+      echo"</div>";
     }
   } 
 }
@@ -109,6 +121,23 @@ if (isset($_POST['mailrss']))
       $name     =   "Wbforum BVD";
       $mailsend =   sendmail($to,$subject,$message,$name);
       echo "<h1>lien envoyé vers votre boite mail personelle.</h1>";
+} 
+
+if (isset($_POST['mailrssother']))
+{
+  if (isset($_POST['emailrssother']) && (preg_match('#[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$#',$_POST['emailrssother'])))
+  {
+    $to       =   $_POST['emailrssother'];
+    $subject  =   "Bonne lecture de la part de ".$_SESSION['nom']." ".$_SESSION['prenom'].".";
+    $message  =   "<a href =".$_POST['urlrss'].">".$_POST['nomrss']."</a>";
+    $name     =   "Wbforum BVD";
+    $mailsend =   sendmail($to,$subject,$message,$name);
+    echo "<h1>lien envoyé vers ".$_POST['emailrssother'].".</h1>";
+  }
+  else
+  {
+    echo "<h1>L'adresse mail proposée n'est pas correctement renseignée (ou meme carement PAS renseignée ! faite un peu attention !).</h1>";
+  }
 } 
 ?>
 </div>

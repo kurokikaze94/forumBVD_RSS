@@ -1,6 +1,8 @@
 <?php require_once("includes/header.php"); ?>
 <?php if($_SESSION['auth'] != 0) {header("Location:".WEBROOT."index.php");}?>
 <?php
+	echo"<h1>CREATION DE COMPTE</h1>";
+	
 	if (isset($_POST['submit']))
 	{
 	    $login_erreur1 = NULL;

@@ -4,7 +4,9 @@
 <div>
 <div>
 <?php
-$cat = (isset($_GET['cat']))?htmlspecialchars($_GET['cat']):'';
+  echo"<h1>ADMINISTRATION</h1>";
+
+  $cat = (isset($_GET['cat']))?htmlspecialchars($_GET['cat']):'';
 
   switch($cat)
   {

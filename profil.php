@@ -4,7 +4,8 @@
 <div>
 	<div>
 <?php
-       //On récupère les infos du membre
+       echo"<h1>PROFIL</h1>";
+      
        $query=$bdd->prepare('SELECT * FROM user WHERE UserLogin=:login');
        $query->bindValue(':login',$_SESSION['login'], PDO::PARAM_STR);
        $query->execute();

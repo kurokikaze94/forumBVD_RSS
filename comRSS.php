@@ -5,14 +5,14 @@
 <div>
 
 <?php	
-	echo"<h1>FORUM</h1>";
+	echo"<h1>COMMENTER UN FLUX</h1>";
 	
 	$TopicId = $_GET['id_topic'];
 	$TopicLibelle = $_GET['nom_topic'];
 
-	if (isset($_POST['MesId']))
+	if (isset($_POST['idCRSS']))
 	{
-		$MesId = $_POST['MesId'];
+		$MesId = $_POST['idCRSS'];
 	}
 
 	if (isset($_POST['submit']))
@@ -49,9 +49,7 @@
 			$requete4->execute();
 		}
 	}
-?>
 
-<?php
 	echo '<div>';
 	echo '<h1>'.$TopicLibelle.'</h1>';
 	echo '</div>';

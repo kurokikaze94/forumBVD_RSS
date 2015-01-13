@@ -1,6 +1,8 @@
 <?php require_once("includes/header.php"); ?>
 <?php if($_SESSION['auth'] != 1) {header("Location:".WEBROOT."index.php");}?>
 <?php
+	echo"<h1>MISE A JOUR DE VOTRE PROFIL</h1>";
+
 	$cat = (isset($_GET['cat']))?htmlspecialchars($_GET['cat']):'';
 
 	switch($cat)

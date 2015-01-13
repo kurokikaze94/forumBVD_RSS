@@ -1,28 +1,10 @@
 <?php include("lib/includes.php"); ?>
 <?php include("includes/header.php"); ?>
 <?php if($_SESSION['auth'] == 0) {header("Location:".WEBROOT."index.php");}?>
-	
-<?php
-	echo"<h1>FORUM</h1>";
-	
-	if (isset($_POST['addTopic']))
-		{
-			extract($_POST);
 
-			if (isset($topicArea))
-			{
-				if($topicArea != "ajouter un nouveau topic ?")
-				{
-					$requete3 = $bdd->prepare('INSERT INTO topics(TopicLibelle, TopicDate, UserId, CatId) 
-						VALUES (:TopicLibelle,now(),:UserId,:CatId)');
-					$requete3->bindValue(':TopicLibelle',$topicArea, PDO::PARAM_STR);
-					$requete3->bindValue(':UserId',$_SESSION['id'], PDO::PARAM_INT);
-					$requete3->bindValue(':CatId',$CatId, PDO::PARAM_INT);
-					$requete3->execute();
-				}
-			}
-		}
-
+<?php 
+	echo"<h1>RSS</h1>";
+	
 	if (isset($_POST['supprTopic']))
 		{
 			extract($_POST);
@@ -39,7 +21,7 @@
 			}
 		}
 
-	$requete1 = $bdd->prepare('SELECT * FROM categoriesforum');
+	$requete1 = $bdd->prepare('SELECT * FROM categoriesrss');
 	$requete1->execute();
 	$tmp1count = $requete1->rowCount();
 
@@ -53,7 +35,7 @@
 			extract($requete1->fetch());
 			echo "<li><a href=''><h1>".$CatLibelle."</h1></a>";
 
-			$requete2 = $bdd->prepare('SELECT * FROM topics where CatId = :catid');
+			$requete2 = $bdd->prepare('SELECT * FROM commentairerss where idcatrss = :catid');
 			$requete2->bindValue(':catid',$CatId, PDO::PARAM_INT);
 			$requete2->execute();
 			$tmp2count = $requete2->rowCount();
@@ -81,15 +63,6 @@
 				setFlash("Aucun Topic encore créé !","danger");
 				echo flash();
 			}
-
-			if($_SESSION['droit'] == 3)
-			{
-				echo '<div><form method="post">';
-				echo '<textarea name="topicArea">ajouter un nouveau topic ?</textarea>';
-				echo '<input type="hidden" name="CatId" value="'.htmlspecialchars($CatId).'" />';
-				echo '<input type="submit" class="btn btn-success" value="Ajouter Topic" name="addTopic"/>';
-				echo '</form></div>';
-			}
 			echo '</li></div></div>';
 		}
 
@@ -99,7 +72,7 @@
 		setFlash("Aucune Categorie encore créée !","danger");
 		echo flash();
 	}
-?>
 
+?>
 
 <?php include("includes/footer.php"); ?>
