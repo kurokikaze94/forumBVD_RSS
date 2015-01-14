@@ -3,12 +3,20 @@
 <?php if($_SESSION['auth'] == 0) {header("Location:".WEBROOT."index.php");}?>
 
 <?php 
+  $_SESSION['urlrss'] = null;
+  $_SESSION['nomrss'] = null;
+  $_SESSION['id_topic'] = null;
+  $_SESSION['catrss'] = null;
+  $_SESSION['fluxrss'] = null;
+
   echo"<h1>RSS</h1>";
+
   $choix_cat_flux = 0;
   if (isset($_POST["choix_cat_rss"]))
   {
     $choix_cat_flux = $_POST["choix_cat_rss"];
   }
+    
   $choix_flux = 0;
   if (isset($_POST["choix_rss"]))
   {
@@ -38,7 +46,7 @@
     }
   }
   echo '</select>';
-  echo '<input type="submit" value="CAT" name="CAT"/>';
+  echo '<input type="submit" value="CAT" name="CAT"/></br></br>';
 
   if (isset($_POST['CAT']))
   {
@@ -96,31 +104,51 @@ if (isset($_POST['GO']))
       echo "<a href='".$valeur['link']."'>".$valeur['link']."</a></br></br>";
       echo'<input type="hidden" name="urlrss" value="'.$valeur['link'].'" />';
       echo'<input type="hidden" name="nomrss" value="'.$valeur['title'].'" />';
+      echo'<input type="hidden" name="catrss" value="'.$choix_cat_flux.'" />';
+      echo'<input type="hidden" name="fluxrss" value="'.$choix_flux.'" />';
       echo'<input type="submit" value="mail pour vous" name="mailrss"/>';
       echo'<input type="email" name="emailrssother" placeholder="Email"/>';
       echo'<input type="submit" value="mail pour un ami" name="mailrssother"/></br>';
 
-      $requete3 = $bdd->prepare('SELECT count(*) as countcom FROM commentairerss WHERE URLCRSS = :url');
+      $requete3 = $bdd->prepare('SELECT count(*) as countcom, IdTopicRSS FROM commentairerss WHERE URLCRSS = :url');
       $requete3->bindValue(':url',$valeur['link'], PDO::PARAM_STR);
       $requete3->execute();
       extract($requete3->fetch());
-      
-      echo "<a href='comRSS.php'>Commenter cette new (".$countcom." commentaires actuellement)</a></br></br>";
 
+      if($countcom > 0)
+      {
+        echo'<input type="hidden" name="id_topic" value="'.$IdTopicRSS.'" />';
+      }
+      else
+      {
+        echo'<input type="hidden" name="id_topic" value="x" />';
+      }
+      echo '<input type="submit" value="Commenter cette new ('.$countcom.' commentaire(s) actuellement)" name="commenter"></br></br>';
       echo"</form>";
       echo"</div>";
     }
   } 
 }
 
+if (isset($_POST['commenter']))
+{
+  $_SESSION['urlrss'] = $_POST['urlrss'];
+  $_SESSION['nomrss'] = $_POST['nomrss'];
+  $_SESSION['id_topic'] = $_POST['id_topic'];
+  $_SESSION['catrss'] = $_POST['catrss'];
+  $_SESSION['fluxrss'] = $_POST['fluxrss'];
+
+  header("Location:".WEBROOT."comRSS.php");
+}
+
 if (isset($_POST['mailrss']))
 {
-      $to       =   $_SESSION['email'];
-      $subject  =   "Bonne lecture";
-      $message  =   "<a href =".$_POST['urlrss'].">".$_POST['nomrss']."</a>";
-      $name     =   "Wbforum BVD";
-      $mailsend =   sendmail($to,$subject,$message,$name);
-      echo "<h1>lien envoyé vers votre boite mail personelle.</h1>";
+  $to       =   $_SESSION['email'];
+  $subject  =   "Bonne lecture";
+  $message  =   "<a href =".$_POST['urlrss'].">".$_POST['nomrss']."</a>";
+  $name     =   "Wbforum BVD";
+  $mailsend =   sendmail($to,$subject,$message,$name);
+  echo "<h1>lien envoyé vers votre boite mail personelle.</h1>";
 } 
 
 if (isset($_POST['mailrssother']))
@@ -136,7 +164,7 @@ if (isset($_POST['mailrssother']))
   }
   else
   {
-    echo "<h1>L'adresse mail proposée n'est pas correctement renseignée (ou meme carement PAS renseignée ! faite un peu attention !).</h1>";
+    echo "<h1>L'adresse mail proposée n'est pas correctement renseignée (ou meme carrement PAS renseignée ! faite un peu attention !).</h1>";
   }
 } 
 ?>

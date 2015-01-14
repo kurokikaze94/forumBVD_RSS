@@ -3,7 +3,7 @@
 <?php if($_SESSION['auth'] == 0) {header("Location:".WEBROOT."index.php");}?>
 
 <?php 
-	echo"<h1>RSS</h1>";
+	echo"<h1>COMMENTAIRES RSS</h1>";
 	
 	if (isset($_POST['supprTopic']))
 		{
@@ -11,11 +11,11 @@
 
 			if (isset($TopicId))
 			{
-				$requete4 = $bdd->prepare('DELETE FROM messages WHERE TopicId = :TopicId');
+				$requete4 = $bdd->prepare('DELETE FROM commentairerss WHERE idTopicRSS = :TopicId');
 				$requete4->bindValue(':TopicId',$TopicId, PDO::PARAM_INT);
 				$requete4->execute();
 
-				$requete5 = $bdd->prepare('DELETE FROM topics WHERE TopicId = :TopicId');
+				$requete5 = $bdd->prepare('DELETE FROM topicrss WHERE rssTopicId = :TopicId');
 				$requete5->bindValue(':TopicId',$TopicId, PDO::PARAM_INT);
 				$requete5->execute();
 			}
@@ -35,7 +35,7 @@
 			extract($requete1->fetch());
 			echo "<li><a href=''><h1>".$CatLibelle."</h1></a>";
 
-			$requete2 = $bdd->prepare('SELECT * FROM commentairerss where idcatrss = :catid');
+			$requete2 = $bdd->prepare('SELECT DISTINCT rssTopicId, rssTopicLibelle, URLCRSS FROM topicrss t INNER JOIN commentairerss c on c.idTopicRSS = t.rssTopicId where CatId = :catid');
 			$requete2->bindValue(':catid',$CatId, PDO::PARAM_INT);
 			$requete2->execute();
 			$tmp2count = $requete2->rowCount();
@@ -46,11 +46,11 @@
 				for ($j = 0; $j < $tmp2count ; $j++) 
 				{
 					extract($requete2->fetch());
-					echo "<li><a href='messages.php?id_topic=".$TopicId."&nom_topic=".$TopicLibelle."'>".$TopicLibelle."</a>";
+					echo "<li><a href='comRSS.php?id_topic=".$rssTopicId."&nom_topic=".$rssTopicLibelle."&url_topic=".$URLCRSS."'>".$rssTopicLibelle."</a>";
 					if($_SESSION['droit'] == 2 || $_SESSION['droit'] == 3)
 					{
 						echo '<form method="post">';
-						echo '<input type="hidden" name="TopicId" value="'.htmlspecialchars($TopicId).'" />';
+						echo '<input type="hidden" name="TopicId" value="'.htmlspecialchars($rssTopicId).'" />';
 						echo '<input type="submit" class="btn btn-warning" value="Supprimer Topic" name="supprTopic"/>';
 						echo '</form>';
 					}

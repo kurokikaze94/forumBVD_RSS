@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mar 13 Janvier 2015 à 23:38
+-- Généré le :  Jeu 15 Janvier 2015 à 00:28
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `webforumrss`
 --
-CREATE DATABASE IF NOT EXISTS `webforumrss` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+CREATE DATABASE IF NOT EXISTS `webforumrss` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_mysql500_ci;
 USE `webforumrss`;
 
 -- --------------------------------------------------------
@@ -81,14 +81,25 @@ INSERT INTO `categoriesrss` (`CatId`, `CatLibelle`, `CatDate`, `UserId`) VALUES
 
 DROP TABLE IF EXISTS `commentairerss`;
 CREATE TABLE IF NOT EXISTS `commentairerss` (
-  `idCRSS` int(11) NOT NULL,
+  `idCRSS` int(11) NOT NULL AUTO_INCREMENT,
   `URLCRSS` varchar(255) NOT NULL,
   `commentaire` varchar(500) NOT NULL,
   `dateCRSS` datetime NOT NULL,
-  `idCatrss` int(11) NOT NULL,
+  `idTopicRSS` int(11) NOT NULL,
+  `UserId` int(11) NOT NULL,
   PRIMARY KEY (`idCRSS`),
-  UNIQUE KEY `idCatrss` (`idCatrss`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `UserId` (`UserId`),
+  KEY `idCatrss` (`idTopicRSS`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+
+--
+-- Contenu de la table `commentairerss`
+--
+
+INSERT INTO `commentairerss` (`idCRSS`, `URLCRSS`, `commentaire`, `dateCRSS`, `idTopicRSS`, `UserId`) VALUES
+(23, 'http://www.ign.com/articles/2015/01/14/i-am-bread-update-adding-the-garage', '<p>test vrac ign</p>', '2015-01-15 00:21:43', 28, 14),
+(24, 'http://www.jeuxvideo.com/videos/414319/grim-fandango-remastered-graphismes-affinees-bande-son-reorchestree.htm', '<p>test jeux video JV</p>', '2015-01-15 00:21:59', 29, 14),
+(25, 'http://www.jeuxvideo.com/videos/414319/grim-fandango-remastered-graphismes-affinees-bande-son-reorchestree.htm', 'Message SupprimÃ©', '2015-01-15 00:22:20', 29, 14);
 
 -- --------------------------------------------------------
 
@@ -181,7 +192,15 @@ CREATE TABLE IF NOT EXISTS `topicrss` (
   PRIMARY KEY (`rssTopicId`),
   KEY `UserId` (`UserId`),
   KEY `CatId` (`CatId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=30 ;
+
+--
+-- Contenu de la table `topicrss`
+--
+
+INSERT INTO `topicrss` (`rssTopicId`, `rssTopicLibelle`, `rssTopicDate`, `UserId`, `CatId`) VALUES
+(28, 'I Am Bread Update Adding The Garage', '2015-01-15 00:21:43', 14, 0),
+(29, 'Grim Fandango Remastered : graphismes affinÃ©es, bande-son rÃ©orchestrÃ©e', '2015-01-15 00:21:59', 14, 7);
 
 -- --------------------------------------------------------
 
@@ -265,7 +284,8 @@ ALTER TABLE `categoriesrss`
 -- Contraintes pour la table `commentairerss`
 --
 ALTER TABLE `commentairerss`
-  ADD CONSTRAINT `commentairerss_ibfk_1` FOREIGN KEY (`idCatrss`) REFERENCES `categoriesrss` (`CatId`);
+  ADD CONSTRAINT `commentairerss_ibfk_1` FOREIGN KEY (`idTopicRSS`) REFERENCES `topicrss` (`rssTopicId`),
+  ADD CONSTRAINT `commentairerss_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `user` (`UserId`);
 
 --
 -- Contraintes pour la table `fluxrss`

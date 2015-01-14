@@ -6,14 +6,25 @@
 
 <?php	
 	echo"<h1>COMMENTER UN FLUX</h1>";
-	
-	$TopicId = $_GET['id_topic'];
-	$TopicLibelle = $_GET['nom_topic'];
 
-	if (isset($_POST['idCRSS']))
+	if(!isset($_SESSION['id_topic']))
 	{
-		$MesId = $_POST['idCRSS'];
+		$_SESSION['id_topic'] = $_GET['id_topic'];
 	}
+
+	if(!isset($_SESSION['nomrss']))
+	{
+		$_SESSION['nomrss'] = $_GET['nom_topic'];
+	}
+
+	$TopicLibelle = $_SESSION['nomrss'];
+
+	if(!isset($_SESSION['urlrss']))
+	{
+		$_SESSION['urlrss'] = $_GET['url_topic'];
+	}
+
+	$TopicUrl = $_SESSION['urlrss'];
 
 	if (isset($_POST['submit']))
 	{
@@ -21,19 +32,41 @@
 
 		if (isset($area))
 		{
-			$requete1 = $bdd->prepare('INSERT INTO messages (MesText, MesDate, UserId, TopicId) 
-				VALUES (:MesText,now(),:UserId,:TopicId)');
-			$requete1->bindValue(':MesText',$area, PDO::PARAM_STR);
+			if($_SESSION['id_topic'] == "x")
+			{
+				$requete0 = $bdd->prepare('INSERT INTO topicrss (rssTopicLibelle, rssTopicDate, UserId, CatId) 
+					VALUES (:topiclib,now(),:UserId,:catId)');
+				$requete0->bindValue(':topiclib',$TopicLibelle, PDO::PARAM_STR);
+				$requete0->bindValue(':UserId',$_SESSION['id'], PDO::PARAM_INT);
+				$requete0->bindValue(':catId',$_SESSION['catrss'], PDO::PARAM_INT);
+				$requete0->execute();
+
+				$requete00 = $bdd->prepare('SELECT rssTopicId as Tid FROM topicrss WHERE rssTopicLibelle = :topiclib AND UserId = :UserId AND CatId = :catId');
+				$requete00->bindValue(':topiclib',$TopicLibelle, PDO::PARAM_STR);
+				$requete00->bindValue(':UserId',$_SESSION['id'], PDO::PARAM_INT);
+				$requete00->bindValue(':catId',$_SESSION['catrss'], PDO::PARAM_INT);
+				$requete00->execute();
+				extract($requete00->fetch());
+
+				$_SESSION['id_topic'] = $Tid;
+			}
+
+			$requete1 = $bdd->prepare('INSERT INTO commentairerss (URLCRSS, commentaire, dateCRSS, UserId, idTopicRSS) 
+				VALUES (:urlrss, :comText, now(), :UserId, :TopicId)');
+			$requete1->bindValue(':urlrss',$TopicUrl, PDO::PARAM_STR);
+			$requete1->bindValue(':comText',$area, PDO::PARAM_STR);
 			$requete1->bindValue(':UserId',$_SESSION['id'], PDO::PARAM_INT);
-			$requete1->bindValue(':TopicId',$TopicId, PDO::PARAM_INT);
+			$requete1->bindValue(':TopicId',$_SESSION['id_topic'], PDO::PARAM_INT);
 			$requete1->execute();
 		}
 	}
 
 	if (isset($_POST['supprimer']))
 	{
-		$requete3 = $bdd->prepare('UPDATE messages SET MesText = "Message Supprimé" WHERE MesId = :MesId');
-		$requete3->bindValue(':MesId',$MesId, PDO::PARAM_INT);
+		extract($_POST);
+		
+		$requete3 = $bdd->prepare('UPDATE commentairerss SET commentaire = "Message Supprimé" WHERE idCRSS = :MesId');
+		$requete3->bindValue(':MesId',$idCRSS, PDO::PARAM_INT);
 		$requete3->execute();
 	}
 
@@ -43,34 +76,44 @@
 
 		if (isset($editarea))
 		{
-			$requete4 = $bdd->prepare('UPDATE messages SET MesText = :MesText WHERE MesId = :MesId');
+			$requete4 = $bdd->prepare('UPDATE commentairerss SET commentaire = :MesText WHERE idCRSS = :MesId');
 			$requete4->bindValue(':MesText',$editarea, PDO::PARAM_STR);
-			$requete4->bindValue(':MesId',$MesId, PDO::PARAM_INT);
+			$requete4->bindValue(':MesId',$idCRSS, PDO::PARAM_INT);
 			$requete4->execute();
 		}
 	}
 
-	echo '<div>';
 	echo '<h1>'.$TopicLibelle.'</h1>';
-	echo '</div>';
 
-	$requete2 = $bdd->prepare('SELECT MesId, MesText, MesDate, u.UserLogin, u.UserRole FROM messages m inner join user u on m.UserId = u.UserId where topicid = :topicid');
-	$requete2->bindValue(':topicid',$TopicId, PDO::PARAM_INT);
-	$requete2->execute();
-	$tmpcount = $requete2->rowCount();
+	echo '<form method="post">
+    <textarea id="elm1" name="area"></textarea>
+    <input type="submit" value="Poster" name="submit"/>
+	</form>';
+
+	if($_SESSION['id_topic'] == 'x')
+	{
+		$tmpcount = 0;
+	}
+	else
+	{
+		$requete2 = $bdd->prepare('SELECT idCRSS, commentaire, dateCRSS, u.UserLogin, u.UserRole FROM commentairerss c inner join user u on c.UserId = u.UserId where idTopicRSS = :topicid order by idCRSS desc');
+		$requete2->bindValue(':topicid',$_SESSION['id_topic'], PDO::PARAM_INT);
+		$requete2->execute();
+		$tmpcount = $requete2->rowCount();
+	}
+
 	if($tmpcount > 0)
 	{
-		echo '<div>';
 		for ($k = 0; $k < $tmpcount ; $k++) 
 		{
 			extract($requete2->fetch());
-			echo '<p>Message n°'.($k + 1).' du '.$MesDate.' posté par '.$UserLogin.'</p>';
+			echo '<p>Message n°'.($tmpcount - $k).' du '.$dateCRSS.' posté par '.$UserLogin.'</p>';
 
 			if ($UserLogin == $_SESSION['login'])
 			{
 				echo '<form method="post">';
-				echo '<textarea id="elm1" name="editarea">'.$MesText.'</textarea>';
-				echo '<input type="hidden" name="MesId" value="'.htmlspecialchars($MesId).'" />';
+				echo '<textarea id="elm1" name="editarea">'.$commentaire.'</textarea>';
+				echo '<input type="hidden" name="idCRSS" value="'.htmlspecialchars($idCRSS).'" />';
     			echo '<input type="submit" value="editer" name="editer"/>';
     			echo '<input type="submit" value="supprimer" name="supprimer"/>';
 				echo '</form>';
@@ -81,13 +124,13 @@
 				if($UserRole == 0)
 				{
 					echo 'Message caché car l\'utilisateur a été banni.</p>';
-					echo $MesText.'</br>';
+					echo $commentaire.'</br>';
 				}
 				else
 				{
-					echo $MesText.'</br>';
+					echo $commentaire.'</br>';
 				}
-				echo '<input type="hidden" name="MesId" value="'.htmlspecialchars($MesId).'" />';
+				echo '<input type="hidden" name="idCRSS" value="'.htmlspecialchars($idCRSS).'" />';
     			echo '<input type="submit" value="supprimer" name="supprimer"/>';
 				echo '</form>';
 			}
@@ -99,20 +142,12 @@
 				}
 				else
 				{
-					echo $MesText;
+					echo $commentaire;
 				}
 			}
 			echo '<p>--------------------</p>';
 		}
-		echo '</div>';
 	}
 ?>
-
-<div>
-<form method="post">
-    <textarea id="elm1" name="area"></textarea>
-    <input type="submit" value="Poster" name="submit"/>
-</form>
-</div>
 
 <?php include("includes/footer.php"); ?>

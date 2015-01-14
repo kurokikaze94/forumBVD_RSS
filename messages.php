@@ -32,6 +32,8 @@
 
 	if (isset($_POST['supprimer']))
 	{
+		extract($_POST);
+		
 		$requete3 = $bdd->prepare('UPDATE messages SET MesText = "Message Supprimé" WHERE MesId = :MesId');
 		$requete3->bindValue(':MesId',$MesId, PDO::PARAM_INT);
 		$requete3->execute();
