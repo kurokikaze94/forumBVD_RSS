@@ -3,8 +3,7 @@
 	<?php
       if($_SESSION['auth']==0)
         {
-        	echo "<h1>Hello</h1>";
-        	echo "<h3>Veuillez vous identifier via le boutton 'Login'</h3>";
+        	echo "<h1>Hello</br>Veuillez vous identifier via le boutton 'Login'</h1></br>";
             $requete = $bdd->prepare('SELECT UserLogin FROM user WHERE UserPassword != ""'); 
             $requete->execute();
             $tmp1count = $requete->rowCount();
