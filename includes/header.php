@@ -37,7 +37,7 @@
 
             if($_SESSION['auth']==0)
             {
-              echo " <li><a href='enregistrer.php'>inscription</a></li>";
+              echo " <li><a href='enregistrer.php'>Inscription</a></li>";
               echo " <li><a href='login.php'>Login</a></li>";
             }
             else
@@ -48,8 +48,9 @@
               {
                 echo " <li><a href='admin.php'>Administration</a></li>";
               }
-              echo " <li><a href='rss.php'>flux RSS</a></li>";
+              echo " <li><a href='rss.php'>Flux RSS</a></li>";
               echo " <li><a href='catecomrss.php'>Commentaires RSS</a></li>";
+              echo " <li><a href='mp.php'>MP</a></li>";
               echo " <li><a href='profil.php'>Profil</a></li>";
               echo " <li><a href='logout.php'>Logout</a></li>";
             } 
